@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Career Guidance Platform</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg2: #111827;
+      --panel: #162033;
+      --panel2: #1f2a44;
+      --primary: #7c3aed;
+      --accent: #22c55e;
+      --warning: #f59e0b;
+      --text: #e5eefb;
+      --muted: #b7c3d9;
+      --card: rgba(17, 24, 39, 0.9);
+      --border: rgba(148, 163, 184, 0.18);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0b1020, #111827 55%, #1e293b);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .page-shell {
+      width: min(640px, 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .app {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: 0 20px 55px rgba(0, 0, 0, 0.38);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary), #2563eb);
+      padding: 24px 28px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      text-align: center;
+    }
+
+    .header p {
+      margin: 10px 0 0;
+      text-align: center;
+      color: rgba(255,255,255,0.9);
+      font-size: 1rem;
+    }
+
+    .content {
+      padding: 28px;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    .intro {
+      text-align: center;
+      padding: 12px 8px 8px;
+    }
+
+    .intro h2 {
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      margin-bottom: 16px;
+    }
+
+    .intro p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 680px;
+      margin: 0 auto 18px;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .badge {
+      background: rgba(124, 58, 237, 0.14);
+      border: 1px solid rgba(124, 58, 237, 0.38);
+      color: #d8c6ff;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .question-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+    }
+
+    .question-label {
+      display: inline-block;
+      margin-bottom: 16px;
+      padding: 7px 12px;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.28);
+      color: #9ef0b8;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .question-text {
+      font-size: clamp(1.3rem, 2vw, 1.8rem);
+      margin: 0 0 18px;
+      line-height: 1.4;
+    }
+
+    .options {
+      display: grid;
+      gap: 12px;
+    }
+
+    .option {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: rgba(30, 41, 59, 0.75);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 16px 18px;
+      text-align: left;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .option:hover {
+      transform: translateY(-1px);
+      border-color: rgba(124, 58, 237, 0.6);
+      background: rgba(30, 41, 59, 0.95);
+    }
+
+    .nav {
+      margin-top: 22px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 13px 18px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.98rem;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #2563eb);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: rgba(148, 163, 184, 0.14);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .result-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+    }
+
+    .result-tag {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.15);
+      color: #a7f3d0;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .career-name {
+      margin: 18px 0 8px;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+    }
+
+    .career-stream {
+      color: #facc15;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .career-summary {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.8;
+      margin-bottom: 18px;
+    }
+
+    .career-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .career-item {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 12px;
+      color: var(--text);
+    }
+
+    .career-item strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #dbeafe;
+    }
+
+    @media (max-width: 640px) {
+      .content { padding: 18px; }
+      .nav { flex-direction: column-reverse; }
+      .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <div class="app">
+      <div class="header">
+        <h1>Career Guidance Platform</h1>
+        <p>Find the right path after 10th based on your interests and strengths.</p>
+      </div>
+
+      <div class="content">
+      <section id="introScreen" class="screen active intro">
+        <h2>Choose your future with confidence</h2>
+        <p>
+          This quiz asks a few simple questions about your interests, strengths, and work style.
+          Based on your answers, it suggests the most suitable career path and study stream for you.
+        </p>
+        <div class="badge-row">
+          <span class="badge">Science</span>
+          <span class="badge">Commerce</span>
+          <span class="badge">Arts</span>
+          <span class="badge">Technology</span>
+          <span class="badge">Design</span>
+        </div>
+        <div class="nav" style="justify-content:center; margin-top:30px;">
+          <button class="btn btn-primary" id="startBtn">Start Career Quiz</button>
+        </div>
+      </section>
+
+      <section id="quizScreen" class="screen">
+        <div class="question-box">
+          <div id="questionLabel" class="question-label">Question 1</div>
+          <h3 id="questionText" class="question-text"></h3>
+          <div id="options" class="options"></div>
+          <div class="nav">
+            <button id="prevBtn" class="btn btn-secondary" type="button">Previous</button>
+            <button id="nextBtn" class="btn btn-primary" type="button">Next</button>
+          </div>
+        </div>
+      </section>
+
+        <section id="resultScreen" class="screen">
+          <div class="result-box">
+            <div class="result-tag">Recommended Path</div>
+            <h2 id="careerName" class="career-name"></h2>
+            <div id="careerStream" class="career-stream"></div>
+            <p id="careerSummary" class="career-summary"></p>
+            <div id="careerList" class="career-list"></div>
+            <div class="nav" style="justify-content:center; margin-top:24px;">
+              <button id="restartBtn" class="btn btn-primary" type="button">Retake Quiz</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        text: 'Which kind of activity do you enjoy the most?',
+        options: [
+          { text: 'Drawing, painting, or making art', scores: { painting: 4, design: 3, fashion_design: 2, architecture: 2 } },
+          { text: 'Dancing, singing, or performing on stage', scores: { dance: 4, music: 3, acting: 2, media: 2 } },
+          { text: 'Hair styling, makeup, or beauty care', scores: { cosmetology: 4, fashion_design: 2, beauty: 2 } },
+          { text: 'Coding, software, or tech problems', scores: { software: 4, engineering: 3, research: 2 } },
+          { text: 'Teaching, helping people, or speaking to groups', scores: { teaching: 4, journalism: 3, social_work: 3, public_service: 2 } }
+        ]
+      },
+      {
+        text: 'Which subject feels most natural to you?',
+        options: [
+          { text: 'Art, drawing, and design', scores: { painting: 3, design: 4, fashion_design: 2, architecture: 2 } },
+          { text: 'Music, dance, and performance', scores: { dance: 3, music: 4, acting: 2, media: 2 } },
+          { text: 'Beauty, grooming, and style', scores: { cosmetology: 4, fashion_design: 2, photography: 1 } },
+          { text: 'Math, science, and technology', scores: { software: 3, engineering: 4, medical: 2 } },
+          { text: 'Languages, social studies, and public service', scores: { journalism: 3, teaching: 3, law: 2, public_service: 3 } }
+        ]
+      },
+      {
+        text: 'What kind of work environment do you imagine for yourself?',
+        options: [
+          { text: 'Creative studio, salon, or art space', scores: { painting: 3, design: 3, cosmetology: 4, fashion_design: 2 } },
+          { text: 'Stage, performance hall, or music room', scores: { dance: 4, music: 4, acting: 3, media: 2 } },
+          { text: 'Beauty centre or fashion showroom', scores: { cosmetology: 4, fashion_design: 3, photography: 2 } },
+          { text: 'Office, lab, or technology workspace', scores: { software: 4, engineering: 3, medical: 2 } },
+          { text: 'Classroom, community service, or public field', scores: { teaching: 4, social_work: 3, journalism: 2, public_service: 3 } }
+        ]
+      },
+      {
+        text: 'Which of these career goals sounds most appealing?',
+        options: [
+          { text: 'Become a designer, painter, or fashion stylist', scores: { painting: 3, design: 4, fashion_design: 4, architecture: 2 } },
+          { text: 'Become a dancer, singer, or performer', scores: { dance: 4, music: 4, acting: 3, media: 2 } },
+          { text: 'Become a beautician, cosmetologist, or salon expert', scores: { cosmetology: 5, fashion_design: 2, beauty: 2 } },
+          { text: 'Become a doctor, engineer, or tech specialist', scores: { medical: 3, engineering: 4, software: 4 } },
+          { text: 'Become a teacher, journalist, or social worker', scores: { teaching: 4, journalism: 4, social_work: 4, law: 2 } }
+        ]
+      },
+      {
+        text: 'How do you like to express your ideas?',
+        options: [
+          { text: 'Through colors, sketches, and visual creativity', scores: { painting: 4, design: 3, architecture: 2 } },
+          { text: 'Through movement, rhythm, and performance', scores: { dance: 4, music: 4, acting: 3 } },
+          { text: 'Through style, grooming, and appearance', scores: { cosmetology: 5, fashion_design: 3, beauty: 2 } },
+          { text: 'Through logic, science, and technical knowledge', scores: { software: 4, engineering: 4, medical: 2 } },
+          { text: 'Through words, service, and leadership', scores: { journalism: 3, teaching: 4, social_work: 4, public_service: 2 } }
+        ]
+      }
+    ];
+
+    const careerProfiles = {
+      software: {
+        name: 'Software Engineer / AI Specialist',
+        stream: 'Science + Computer Science / IT',
+        summary: 'You enjoy logic, systems, and solving technical problems. This path is ideal if you like coding, apps, software, AI, and digital innovation.',
+        related: ['Computer Science', 'Artificial Intelligence', 'Cybersecurity', 'App Development']
+      },
+      medical: {
+        name: 'Doctor / Medical Professional',
+        stream: 'Science + Biology',
+        summary: 'You are likely to do well in healthcare, diagnostics, and patient care. This path fits students who enjoy science and helping people.',
+        related: ['Medicine', 'Dentistry', 'Nursing', 'Pharmacy']
+      },
+      design: {
+        name: 'Designer / Creative Professional',
+        stream: 'Arts / Design / Media',
+        summary: 'You are imaginative and expressive. This path suits creative work like UI/UX design, graphics, architecture, banners, and visual communication.',
+        related: ['Graphic Design', 'Interior Design', 'Animation', 'UX Design']
+      },
+      business: {
+        name: 'Business Leader / Entrepreneur',
+        stream: 'Commerce + Business Studies',
+        summary: 'You are strategic, practical, and good at decision-making. This path is perfect for commerce, entrepreneurship, and management careers.',
+        related: ['Business Management', 'Finance', 'Entrepreneurship', 'Marketing']
+      },
+      agriculture: {
+        name: 'Agriculture / Environmental Expert',
+        stream: 'Science + Agriculture / Environment',
+        summary: 'You care about nature, sustainability, and practical work. This field includes farming, research, and green industry careers.',
+        related: ['Agriculture', 'Horticulture', 'Environmental Science', 'Food Technology']
+      },
+      public_service: {
+        name: 'Public Service / Civil Career',
+        stream: 'Arts / Humanities + Social Studies',
+        summary: 'You are responsible, socially aware, and interested in making a difference. This path suits governance, public work, and community service.',
+        related: ['Civil Services', 'Administration', 'Law', 'Public Policy']
+      },
+      engineering: {
+        name: 'Engineer / Technical Specialist',
+        stream: 'Science + PCM',
+        summary: 'You enjoy building real-world systems and solving technical challenges. This path works well for mechanical, civil, electrical, and industrial engineering.',
+        related: ['Mechanical Engineering', 'Civil Engineering', 'Electrical Engineering', 'Robotics']
+      },
+      law: {
+        name: 'Law / Legal Career',
+        stream: 'Humanities / Commerce',
+        summary: 'You are confident in arguments, responsibility, and structured thinking. Legal careers are suitable for communication, policy, and justice.',
+        related: ['Law', 'Advocacy', 'Legal Consulting', 'Judiciary']
+      },
+      cosmetology: {
+        name: 'Cosmetologist / Beauty Expert',
+        stream: 'Beauty & Wellness / Fashion',
+        summary: 'You enjoy grooming, styling, and helping people look confident. This path is ideal for salons, skincare, makeup, and beauty services.',
+        related: ['Cosmetology', 'Hair Styling', 'Makeup Artistry', 'Skincare']
+      },
+      dance: {
+        name: 'Dance Artist / Choreographer',
+        stream: 'Performing Arts / Dance',
+        summary: 'You are energetic, expressive, and enjoy performance. This field suits dance, choreography, stage work, and cultural arts.',
+        related: ['Classical Dance', 'Choreography', 'Stage Performance', 'Dance Instructor']
+      },
+      painting: {
+        name: 'Painter / Fine Artist',
+        stream: 'Fine Arts / Visual Arts',
+        summary: 'You love colors, imagination, and visual expression. This path is great for painting, illustration, murals, and creative art careers.',
+        related: ['Painting', 'Illustration', 'Mural Art', 'Sketching']
+      },
+      fashion_design: {
+        name: 'Fashion Designer / Stylist',
+        stream: 'Fashion Design / Textile Arts',
+        summary: 'You have an eye for style, trends, and beauty. This path fits clothing design, styling, boutique work, and fashion creation.',
+        related: ['Fashion Design', 'Styling', 'Textile Design', 'Boutique Business']
+      },
+      music: {
+        name: 'Musician / Singer',
+        stream: 'Music / Performing Arts',
+        summary: 'You enjoy rhythm, melody, and performance. This path is suitable for music, singing, instruments, and creative arts.',
+        related: ['Music', 'Singing', 'Instrumental Arts', 'Music Production']
+      },
+      photography: {
+        name: 'Photographer / Visual Storyteller',
+        stream: 'Photography / Media Arts',
+        summary: 'You notice details, beauty, and emotion in everyday moments. This career fits photography, media, and visual storytelling.',
+        related: ['Photography', 'Videography', 'Media Production', 'Photo Editing']
+      },
+      teaching: {
+        name: 'Teacher / Education Professional',
+        stream: 'Education / Humanities',
+        summary: 'You enjoy guiding others, sharing knowledge, and making learning interesting. This path is ideal for teaching and mentorship.',
+        related: ['Teaching', 'Mentoring', 'Education', 'School Leadership']
+      },
+      journalism: {
+        name: 'Journalist / Content Creator',
+        stream: 'Mass Communication / Media',
+        summary: 'You like storytelling, communication, and understanding people. This field is great for journalism, media, and digital content.',
+        related: ['Journalism', 'Content Writing', 'Media', 'Public Relations']
+      },
+      social_work: {
+        name: 'Social Worker / Community Helper',
+        stream: 'Social Science / Community Service',
+        summary: 'You care deeply about people and want to support communities. This path is ideal for social work, counseling, and service.',
+        related: ['Social Work', 'Counseling', 'Community Service', 'NGO Work']
+      },
+      acting: {
+        name: 'Actor / Performer',
+        stream: 'Drama / Performing Arts',
+        summary: 'You are expressive, confident, and enjoy performance. This path suits acting, drama, films, and stage arts.',
+        related: ['Acting', 'Theatre', 'Film', 'Public Speaking']
+      }
+    };
+
+    const state = {
+      currentIndex: 0,
+      scores: {}
+    };
+
+    const introScreen = document.getElementById('introScreen');
+    const quizScreen = document.getElementById('quizScreen');
+    const resultScreen = document.getElementById('resultScreen');
+    const questionLabel = document.getElementById('questionLabel');
+    const questionText = document.getElementById('questionText');
+    const optionsContainer = document.getElementById('options');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const startBtn = document.getElementById('startBtn');
+    const restartBtn = document.getElementById('restartBtn');
+
+    function resetScores() {
+      state.scores = {};
+    }
+
+    function showScreen(screen) {
+      introScreen.classList.remove('active');
+      quizScreen.classList.remove('active');
+      resultScreen.classList.remove('active');
+      screen.classList.add('active');
+    }
+
+    function renderQuestion() {
+      const q = questions[state.currentIndex];
+      questionLabel.textContent = `Question ${state.currentIndex + 1} of ${questions.length}`;
+      questionText.textContent = q.text;
+      optionsContainer.innerHTML = '';
+
+      q.options.forEach((option, index) => {
+        const button = document.createElement('button');
+        button.className = 'option';
+        button.type = 'button';
+        button.textContent = option.text;
+        button.addEventListener('click', () => {
+          handleAnswer(index, option.scores);
+        });
+        optionsContainer.appendChild(button);
+      });
+
+      prevBtn.style.visibility = state.currentIndex === 0 ? 'hidden' : 'visible';
+      nextBtn.textContent = state.currentIndex === questions.length - 1 ? 'Finish Quiz' : 'Next';
+    }
+
+    function handleAnswer(index, scores) {
+      const current = questions[state.currentIndex];
+      const selectedOption = current.options[index];
+
+      Object.keys(selectedOption.scores).forEach((key) => {
+        state.scores[key] = (state.scores[key] || 0) + selectedOption.scores[key];
+      });
+
+      if (state.currentIndex < questions.length - 1) {
+        state.currentIndex += 1;
+        renderQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      const sorted = Object.entries(state.scores).sort((a, b) => b[1] - a[1]);
+      const topCareer = sorted[0]?.[0] || 'software';
+      const profile = careerProfiles[topCareer];
+      const resultName = document.getElementById('careerName');
+      const resultStream = document.getElementById('careerStream');
+      const resultSummary = document.getElementById('careerSummary');
+      const resultList = document.getElementById('careerList');
+
+      resultName.textContent = profile.name;
+      resultStream.textContent = `Best-fit stream: ${profile.stream}`;
+      resultSummary.textContent = profile.summary;
+      resultList.innerHTML = '';
+
+      profile.related.forEach((item) => {
+        const div = document.createElement('div');
+        div.className = 'career-item';
+        div.innerHTML = `<strong>${item}</strong>Good career direction for your interests.`;
+        resultList.appendChild(div);
+      });
+
+      showScreen(resultScreen);
+    }
+
+    function startQuiz() {
+      state.currentIndex = 0;
+      resetScores();
+      renderQuestion();
+      showScreen(quizScreen);
+    }
+
+    startBtn.addEventListener('click', startQuiz);
+    prevBtn.addEventListener('click', () => {
+      if (state.currentIndex > 0) {
+        state.currentIndex -= 1;
+        renderQuestion();
+      }
+    });
+    nextBtn.addEventListener('click', () => {
+      if (state.currentIndex === questions.length - 1) {
+        showResult();
+      } else {
+        state.currentIndex += 1;
+        renderQuestion();
+      }
+    });
+    restartBtn.addEventListener('click', () => {
+      startQuiz();
+    });
+  </script>
+</body>
+</html>
